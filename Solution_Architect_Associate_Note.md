@@ -122,9 +122,82 @@
   + no charge for data transfer between s3 and cloudfront
 
 # Topic
-## Network
+## Security & Encryption
+### KMS：Key Management Service   
++ encryption in AWS == KMS
++ IAM for authorization, audit KMS key usage using **CloudTrail**
++ KMS keys Types
+   ![key types](https://github.com/MarkFu/AWS_SAA_study_material/blob/main/pic/CMKs.png)
++ CMK symmetry  
+  ![symmetry](https://github.com/MarkFu/AWS_SAA_study_material/blob/main/pic/CMK_sym.png)
++ **DynamoDB Table**: client-side encryption to protect specific fields and guarantee only decrption if the client has access to an API key
++ **Global Aurora**:(AWS Encryption SDK) protect specific fields even from database admins
++ **S3 Objects**:
+   +  SSE-S3 are replicates by default
+   +  SSE-C(customer provided key) are never replicated
+   +  SSE-KMS: adapt the key policy, IAM role to decrypt the source, key to encrypt for the target KMS key
++ AMI Sharing Process Encrypted via KMS:
+### SSM Parameter Store
++ component of AWS System Manager(SSM)
++ **serverless** , version tracking of configurations and secrets
++  IAM(security), Amazon EventBridge(notifications), CloudFormation
+### Secrets Manager
++ force **rotation of secrets** every X days
++ automate generation of secrets on rotation
++ secrets are encrypted using KMS, integrated with RDS
++ cases: disaster recovery strategies, multi-region apps, multi-region DB...
+### Certificate Manager (ACM)
++ provision, manage, deploy TLS Certificates
++ free of charge for public TLS certificates
++ automatic TLS certificate renewal
++ can't use ACM with EC2
+### Web Application Firewall (WAF)
++ protect web applications(layer 7) from common attack - SQL injection and cross-site scripting(XSS) 
++ layer7 IS HTTP ( vs Layer 4 is TCP/UDP) ---> no support for NLB(layer4)
++ we can use global accelerator for fixed IP and WAF on the ALB
+### AWS Firewall Manager
++ Manage rules in all accounts of an AWS Organization
++ use cases:
+   + define ACL rules in WAF
+   + protect resources: WAF alone
+   + WAF across accounts, automate protection: **Firewall Manager + WAF**
+   + frequent DDoS attacks: advanced Shield
+### GuardDuty
++ Intelligent Threat discovery to protect AWS Account
+### Macie
++ use ML to protect and alert sensitive data, such as PII(personal idenytifiable information) 
+## AWS Virtual Private Cloud - VPC
+### 1. Subnets
+### 2. VPC & subnet sizing
+### 3. IP Addresses
+### 4. IP Addresses
+### 5. Elastic Network Interface (ENI)
+### 6. Rout tables
+### 7. Internet Gateways -- IGW
+### 8. NAT
+### 9. Egress-only Internet gateway
+### 10. Shared VPCs
+### 11. VPC Endpoints
+### 12. VPC Peering
+### 13. VPC VPN Connections
+### 14. VPC Security
+### 15. VPC Flow logs
 
 
+### CloudFront vs Global Accelerator
++ content delivery network (CDN) through edge locations or POP
++ DDoS protection (global), Shield, WAF
++ CloudFront vs S3 cross region replication
+   + global edge network | setup for each region
+   + files are catched for a TTL(maybe a day) | near real-time
+   + great for **static** content that be available **everywhere** | read only and **dynamic** content that be available at low-latency in **few regions**
++  does NOT have the capability to route the traffic to the closest edge location via an **Anycast static IP Address**(page 342/864)
+   + **Global Accelerator can** create Anycast IP and send traffic directly to Edge Locations
+      + Consistent performance: internal AWS
+      + Health checks: disaster recovery
+      + Security: shield, only 2 external IP need to be whitelisted
++  **CloudFront vs Global Accelerator**
+   + improve performance for both catcheable contenT such as images and videos | (GA): TCP or UDP    + dynamic content | HTTP use cases that require static IP addresses/ fast regional failover/ game, IoT, voice over IP
 
 
 
