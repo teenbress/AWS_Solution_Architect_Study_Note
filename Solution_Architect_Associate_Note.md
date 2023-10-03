@@ -139,11 +139,11 @@
 + AMI Sharing Process Encrypted via KMS:
 ### SSM Parameter Store
 + component of AWS System Manager(SSM)
-+ **serverless** , version tracking of configurations and secrets
-+  IAM(security), Amazon EventBridge(notifications), CloudFormation
++ serverless, **version tracking** of configurations and **secrets**
++ IAM(security), Amazon EventBridge(notifications), CloudFormation
 ### Secrets Manager
 + force **rotation of secrets** every X days
-+ automate generation of secrets on rotation
++ **automate** generation of secrets on rotation
 + secrets are encrypted using KMS, integrated with RDS
 + cases: disaster recovery strategies, multi-region apps, multi-region DB...
 ### Certificate Manager (ACM)
@@ -168,20 +168,63 @@
 + use ML to protect and alert sensitive data, such as PII(personal idenytifiable information) 
 ## AWS Virtual Private Cloud - VPC
 ### 1. Subnets
-### 2. VPC & subnet sizing
-### 3. IP Addresses
-### 4. IP Addresses
-### 5. Elastic Network Interface (ENI)
-### 6. Rout tables
-### 7. Internet Gateways -- IGW
-### 8. NAT
-### 9. Egress-only Internet gateway
-### 10. Shared VPCs
-### 11. VPC Endpoints
-### 12. VPC Peering
-### 13. VPC VPN Connections
-### 14. VPC Security
-### 15. VPC Flow logs
++ 5 IP addresses: first 4 and last 1(broadcast address)
+### 2. Internet Gateways -- IGW
++ need to edit route tables
++ public subnet
+### 3. Bastion Hosts
+### 4. NAT(Network Address Translation) Instance
++ EC2 in private subnets connect to the Internet
++ must be launched in a public subnet
++ **route tables** must be configured to route traffic from private subnets to the NAT instance
++ internet traffic bandwidth depends on EC2 instance type
++ Security groups & rules:
+   + inbound：
+      + **allow HTTP/HTTPS traffic coming from private subnets**
+      + **allow SSH from home network**
+   + outbound:
+      + **allow HTTP/HTTPS traffic to the internet ** 
+### 5. NAT Gateway
++ require an IGW (private subnet -> NATGW -> IGW)
++ NACL is **staetless**: the NACL outbound rules are going to be evaluated. And if they are not passing, then the request will not make it through.
++ **security group** is **stateful**: whatever is accepted in can go also out, no rules being evaluated;
+   + inbound request: denied by security group, allowed in != allowed out;
+   + outbound request: denied by NACL, allowed out == allowed in
+### 6. VPC Endpoints(AWS PrivateLink)(Page 731)
++ Allows to connect to AWS services using a **private network** instead of using the public Internet
++ Remove the need of IGW, NATGW, ... TO AWS
++ Use cases: check DNS setting resolution in your VPC; check route tables.
++ Types:
+   + interface endpoint: ENI(private Link, as entry point) + security group, charged
+      + on-premises eg. site to site VPN, or Direct Connect --> Interface Endpoint --> PrivateLink --> S3; 
+   + Gateway Endpoint: Gateway(as the target), only support S3/DynammoDB , free
+      + iN-VPC Apps --> Gateway Endpoint --> S3;   
+### 7. VPC Flow Logs
++ capture information about IP traffic going into the interfaces:
+   + VPC/Subnet/ENI level Flow logs
++ can go to S3, CloudWatch Logs, and Kinesis Data Firehose
++ analyze using Athena or CloudWatch Logs Insights  
+### 8. Site-to-Site VPN
++  setup a Customer Gateway on DC, a Virtual Private Gateway on VPC, and site-to-site VPN over **public Internet**
+### 9. VPN CloudHub
+### 10. Direct Connect (DX)
++ dedicated **private** connection from a remote network to your VPC
+### 11. Direct Connect Gateway
++ **one or more VPC in different regions(same account)** <-->Direct Connect Gateway <--> Direct Connect(With A Virtual Private Gateway)
++ Connection Types
+   + Dedicated Connections: 1Gpbs, 10Gpbs, 100Gpbs
+   + Hosted Connections: 50 Mbps, 500Mbps, to 10 Gbps
++ need often longer than 1 month to establish a new connection
++ backup Direct Connect connection(expensive),  
+### 11.Transit Gateway
++ sharing cross-account using Resource Access Manager(RAM)
++ supports **IP Multicast** (not supported by any other AWS service)
+### 12.Egress-only Internet Gateway
++ Used for IPv6 only
++ must update the Route Tables
+### 13. AWS Network Firewall
++ from Layer 3 to Layer 7 protection, protect entire Amazon VPC
++ uses the AWS **Gateway Load Balancer**
 
 
 ### CloudFront vs Global Accelerator
