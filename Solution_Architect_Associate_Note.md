@@ -200,15 +200,21 @@
    + Gateway Endpoint: Gateway(as the target), only support S3/DynammoDB , free
       + iN-VPC Apps --> Gateway Endpoint --> S3;   
 ### 7. VPC Flow Logs
-+ capture information about IP traffic going into the interfaces:
++ a VPC feature that captures information about IP traffic going into and from the interfaces:
    + VPC/Subnet/ENI level Flow logs
 + can go to S3, CloudWatch Logs, and Kinesis Data Firehose
-+ analyze using Athena or CloudWatch Logs Insights  
++ analyze using Athena or CloudWatch Logs Insights
+### 8. VPC Traffic Mirroring
++ a VPC feature used to copy network traffic from an Elastic Network Interface(ENI)
++ Use cases: content inspection, threat monitoring, troubleshooting ect. 
 ### 8. Site-to-Site VPN
 +  setup a Customer Gateway on DC, a Virtual Private Gateway on VPC, and site-to-site VPN over **public Internet**
 ### 9. VPN CloudHub
++ communicate with multiple sites using AWS VPN, with or without a VPC
 ### 10. Direct Connect (DX)
 + dedicated **private** connection from a remote network to your VPC
++ need a **Virtual Private Gateway** on your VPC
++ access public resources(S3) and private(EC2) on same connection
 ### 11. Direct Connect Gateway
 + **one or more VPC in different regions(same account)** <-->Direct Connect Gateway <--> Direct Connect(With A Virtual Private Gateway)
 + Connection Types
@@ -218,6 +224,7 @@
 + backup Direct Connect connection(expensive),  
 ### 11.Transit Gateway
 + sharing cross-account using Resource Access Manager(RAM)
++ works with Direct Connect Gateway, VPN connections
 + supports **IP Multicast** (not supported by any other AWS service)
 ### 12.Egress-only Internet Gateway
 + Used for IPv6 only
