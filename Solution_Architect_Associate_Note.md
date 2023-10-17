@@ -237,17 +237,21 @@
 ### CloudFront vs Global Accelerator
 + content delivery network (CDN) through edge locations or POP
 + DDoS protection (global), Shield, WAF
++ lambda@Edge help run code closer to users, improve performance, increase availability, dynamic IP address;
++ static webpages;
 + CloudFront vs S3 cross region replication
    + global edge network | setup for each region
    + files are catched for a TTL(maybe a day) | near real-time
    + great for **static** content that be available **everywhere** | read only and **dynamic** content that be available at low-latency in **few regions**
 +  does NOT have the capability to route the traffic to the closest edge location via an **Anycast static IP Address**(page 342/864)
-   + **Global Accelerator can** create Anycast IP and send traffic directly to Edge Locations
+   + **Global Accelerator** : latency-based routing and automated failover: direct the users to the lowest latency endpoint and if the endpoint is unhealthy GA automatically routes to the next best point.(improve performance and availability)  
       + Consistent performance: internal AWS
       + Health checks: disaster recovery
       + Security: shield, only 2 external IP need to be whitelisted
 +  **CloudFront vs Global Accelerator**
    + improve performance for both catcheable contenT such as images and videos | (GA): TCP or UDP    + dynamic content | HTTP use cases that require static IP addresses/ fast regional failover/ game, IoT, voice over IP
++ **vs. Route 53** Route 53 latency-based routing will **not auto-failover** the application to another endpoint (unless health check enable)
+   + Route 53 does not reduce internet latency.  
 
 
 
